@@ -53,7 +53,8 @@ public class OccasionalFlashbangClient implements ClientModInitializer {
 
 			boolean shouldTriggerOnChance = config.chance > 0
 					&& RANDOM.nextInt(config.chance * 20) == 0;
-			boolean shouldTriggerOnDamage = config.damage > 0 && damageTaken >= config.damage;
+			boolean shouldTriggerOnDamage = config.damage > 0
+					&& ((damageTaken >= config.damage) || (currentHealth <= 0 && lastHealth > 0));
 
 			if (shouldTriggerOnChance || shouldTriggerOnDamage) {
 				FlashbangManager.trigger(client);
@@ -62,8 +63,7 @@ public class OccasionalFlashbangClient implements ClientModInitializer {
 			lastHealth = currentHealth;
 		});
 
-		HudElementRegistry.attachElementBefore(VanillaHudElements.HOTBAR,
-				Identifier.fromNamespaceAndPath(OccasionalFlashbang.MOD_ID, "flashbang"),
+		HudElementRegistry.attachElementBefore(VanillaHudElements.HOTBAR, FLASHBANG_IDENTIFIER,
 				OccasionalFlashbangClient::render);
 	}
 

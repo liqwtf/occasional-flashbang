@@ -8,5 +8,4 @@ public class FlashbangConfig implements ConfigData {
     public boolean enabled = true;
     public int chance = 1000;
     public int damage = 8;
-
 }

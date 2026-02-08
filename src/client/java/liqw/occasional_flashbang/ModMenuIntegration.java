@@ -5,6 +5,7 @@ import com.terraformersmc.modmenu.api.ModMenuApi;
 
 import liqw.occasional_flashbang.config.FlashbangConfig;
 import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.ConfigHolder;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
@@ -21,8 +22,8 @@ public class ModMenuIntegration implements ModMenuApi {
             ConfigEntryBuilder entryBuilder = builder.entryBuilder();
             ConfigCategory general = builder.getOrCreateCategory(Component.literal("General"));
 
-            var configHolder = AutoConfig.getConfigHolder(FlashbangConfig.class);
-            var config = configHolder.getConfig();
+            ConfigHolder<FlashbangConfig> configHolder = AutoConfig.getConfigHolder(FlashbangConfig.class);
+            FlashbangConfig config = configHolder.getConfig();
 
             general.addEntry(entryBuilder.startBooleanToggle(Component.literal("Enabled"), config.enabled)
                     .setTooltip(Component.literal("Completely enable or disable the mod"))
