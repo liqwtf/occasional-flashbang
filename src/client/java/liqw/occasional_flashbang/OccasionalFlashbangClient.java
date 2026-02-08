@@ -16,7 +16,7 @@ import net.minecraft.sounds.SoundEvent;
 public class OccasionalFlashbangClient implements ClientModInitializer {
 	private static final Random RANDOM = new Random();
 	private static final int FLASH_DURATION = 3000;
-	private static final int CHANCE = 20;
+	private static final int CHANCE = 1000;
 
 	public static final SoundEvent FLASHBANG_SOUND = SoundEvent
 			.createVariableRangeEvent(Identifier.fromNamespaceAndPath(OccasionalFlashbang.MOD_ID, "flashbang"));
