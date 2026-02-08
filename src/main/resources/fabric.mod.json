@@ -3,17 +3,18 @@
 	"id": "occasional-flashbang",
 	"version": "${version}",
 	"name": "Occasional Flashbang",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "Minecraft but you occasionally get flashbanged",
 	"authors": ["liqw"],
 	"contact": {
 		"homepage": "https://fabricmc.net/",
 		"sources": "https://github.com/FabricMC/fabric-example-mod"
 	},
-	"license": "CC0-1.0",
+	"license": "MIT",
 	"icon": "assets/occasional-flashbang/icon.png",
 	"environment": "client",
 	"entrypoints": {
-		"client": ["liqw.occasional_flashbang.OccasionalFlashbangClient"]
+		"client": ["liqw.occasional_flashbang.OccasionalFlashbangClient"],
+		"modmenu": ["liqw.occasional_flashbang.ModMenuIntegration"]
 	},
 	"mixins": [
 		"occasional-flashbang.mixins.json",
