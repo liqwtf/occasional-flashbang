@@ -3,6 +3,8 @@ package liqw.occasional_flashbang;
 import java.util.Random;
 
 import liqw.occasional_flashbang.config.FlashbangConfig;
+import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
@@ -18,20 +20,29 @@ import net.minecraft.sounds.SoundEvent;
 public class OccasionalFlashbangClient implements ClientModInitializer {
 	private static final Random RANDOM = new Random();
 	private static float lastHealth = -1f;
+	private static final Identifier FLASHBANG_IDENTIFIER = Identifier.fromNamespaceAndPath(OccasionalFlashbang.MOD_ID,
+			"flashbang");
 
 	public static final SoundEvent FLASHBANG_SOUND = SoundEvent
-			.createVariableRangeEvent(Identifier.fromNamespaceAndPath(OccasionalFlashbang.MOD_ID, "flashbang"));
+			.createVariableRangeEvent(FLASHBANG_IDENTIFIER);
 
 	@Override
 	public void onInitializeClient() {
+		AutoConfig.register(FlashbangConfig.class, GsonConfigSerializer::new);
+
 		ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> lastHealth = -1f);
 
 		Registry.register(BuiltInRegistries.SOUND_EVENT,
-				Identifier.fromNamespaceAndPath(OccasionalFlashbang.MOD_ID, "flashbang"),
+				FLASHBANG_IDENTIFIER,
 				FLASHBANG_SOUND);
 
+		FlashbangConfig config = AutoConfig.getConfigHolder(FlashbangConfig.class).getConfig();
+
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
-			if (client.player == null || client.isPaused() || !FlashbangConfig.enabled)
+
+			OccasionalFlashbang.LOGGER.debug("{} {} {}", config.enabled, config.chance, config.damage);
+
+			if (client.player == null || client.isPaused() || !config.enabled)
 				return;
 
 			float currentHealth = client.player.getHealth();
@@ -40,9 +51,9 @@ public class OccasionalFlashbangClient implements ClientModInitializer {
 			}
 			float damageTaken = lastHealth - currentHealth;
 
-			boolean shouldTriggerOnChance = FlashbangConfig.chance > 0
-					&& RANDOM.nextInt(FlashbangConfig.chance * 20) == 0;
-			boolean shouldTriggerOnDamage = FlashbangConfig.damage > 0 && damageTaken >= FlashbangConfig.damage;
+			boolean shouldTriggerOnChance = config.chance > 0
+					&& RANDOM.nextInt(config.chance * 20) == 0;
+			boolean shouldTriggerOnDamage = config.damage > 0 && damageTaken >= config.damage;
 
 			if (shouldTriggerOnChance || shouldTriggerOnDamage) {
 				FlashbangManager.trigger(client);

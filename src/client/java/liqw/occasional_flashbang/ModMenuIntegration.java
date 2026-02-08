@@ -4,6 +4,7 @@ import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
 
 import liqw.occasional_flashbang.config.FlashbangConfig;
+import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
@@ -20,27 +21,39 @@ public class ModMenuIntegration implements ModMenuApi {
             ConfigEntryBuilder entryBuilder = builder.entryBuilder();
             ConfigCategory general = builder.getOrCreateCategory(Component.literal("General"));
 
-            general.addEntry(entryBuilder.startBooleanToggle(Component.literal("Enabled"), FlashbangConfig.enabled)
+            var configHolder = AutoConfig.getConfigHolder(FlashbangConfig.class);
+            var config = configHolder.getConfig();
+
+            general.addEntry(entryBuilder.startBooleanToggle(Component.literal("Enabled"), config.enabled)
                     .setTooltip(Component.literal("Completely enable or disable the mod"))
-                    .setDefaultValue(true).setSaveConsumer(value -> FlashbangConfig.enabled = value).build());
+                    .setDefaultValue(true).setSaveConsumer(value -> {
+                        config.enabled = value;
+                        configHolder.save();
+                    }).build());
 
             general.addEntry(
                     entryBuilder
-                            .startIntField(Component.literal("Flashbang Chance"), FlashbangConfig.chance)
+                            .startIntField(Component.literal("Flashbang Chance"), config.chance)
                             .setTooltip(Component.literal("The chance for a flashbang to randomly occur"),
                                     Component.literal("Set to -1 or 0 to disable"))
                             .setDefaultValue(1000)
                             .setMin(-1)
-                            .setSaveConsumer(value -> FlashbangConfig.chance = value)
+                            .setSaveConsumer(value -> {
+                                config.chance = value;
+                                configHolder.save();
+                            })
                             .build());
 
-            general.addEntry(entryBuilder.startIntField(Component.literal("Damage Threshold"), FlashbangConfig.damage)
+            general.addEntry(entryBuilder.startIntField(Component.literal("Damage Threshold"), config.damage)
                     .setTooltip(Component.literal("The minimum damage required to trigger a flashbang"),
                             Component.literal("Set to -1 or 0 to disable"))
                     .setDefaultValue(8)
                     .setMin(-1)
                     .setMax(20)
-                    .setSaveConsumer(value -> FlashbangConfig.damage = value)
+                    .setSaveConsumer(value -> {
+                        config.damage = value;
+                        configHolder.save();
+                    })
                     .build());
 
             return builder.build();
