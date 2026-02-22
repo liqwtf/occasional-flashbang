@@ -56,8 +56,8 @@ public class OccasionalFlashbangClient implements ClientModInitializer {
             float damageTaken = lastHealth - currentHealth;
 
             boolean shouldTriggerOnChance = config.chance > 0 && RANDOM.nextInt(config.chance * 20) == 0;
-            boolean shouldTriggerOnDamage = config.damage > 0 && ((damageTaken >= config.damage));
-            boolean shouldTriggerOnDeath = config.onDeath && (currentHealth <= 0 && lastHealth > 0);
+            boolean shouldTriggerOnDamage = config.damage > 0 && damageTaken >= config.damage;
+            boolean shouldTriggerOnDeath = config.onDeath && currentHealth <= 0 && lastHealth > 0;
 
             if (shouldTriggerOnChance || shouldTriggerOnDamage || shouldTriggerOnDeath) {
                 FlashbangManager.trigger(client);
