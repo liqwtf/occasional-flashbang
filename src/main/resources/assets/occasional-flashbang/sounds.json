@@ -2,5 +2,9 @@
 	"flashbang": {
 		"subtitle": "sound.occasional-flashbang.flashbang",
 		"sounds": ["occasional-flashbang:flashbang"]
+	},
+	"lobotomy": {
+		"subtitle": "sound.occasional-flashbang.lobotomy",
+		"sounds": ["occasional-flashbang:lobotomy"]
 	}
 }
